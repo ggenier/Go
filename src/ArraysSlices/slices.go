@@ -51,4 +51,28 @@ func main() {
 	for index, value := range thirdSlice {
 		fmt.Println("   index : ", index, " value : ", value)
 	}
+
+	fmt.Println("\nCall function with thirdSlice in parameter")
+	modifySlice(thirdSlice)
+	fmt.Println("\nThird slice after function call : ")
+	fmt.Println("   Slice length : ", len(thirdSlice), " capacity ", cap(thirdSlice))
+	for index, value := range thirdSlice {
+		fmt.Println("   index : ", index, " value : ", value)
+	}
+}
+
+func modifySlice(slice []string){
+	fmt.Println("\nSlice receive in parameter")
+	fmt.Println("   Slice length : ", len(slice), " capacity ", cap(slice))
+	for index, value := range slice {
+		fmt.Println("   index : ", index, " value : ", value)
+	}
+
+	//Modify value
+	slice[0] = "Book 10"
+	fmt.Println("Slice modified 0=>book 10")
+	fmt.Println("   Slice length : ", len(slice), " capacity ", cap(slice))
+	for index, value := range slice {
+		fmt.Println("   index : ", index, " value : ", value)
+	}
 }
