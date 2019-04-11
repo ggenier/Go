@@ -37,4 +37,18 @@ func main() {
 	for index, value := range thirdSlice {
 		fmt.Println("   index : ", index, " value : ", value)
 	}
+
+	//Renference test, no change in thirdSlice
+	fmt.Println("\nChange value in secondSlice[0] = Book 9")
+	secondSlice[0] = "Book 9"
+	fmt.Println("\nSecond slice : ")
+	fmt.Println("   Slice length : ", len(secondSlice), " capacity ", cap(secondSlice))
+	for index, value := range secondSlice {
+		fmt.Println("      index : ", index, " value : ", value)
+	}
+	fmt.Println("\nThird slice : ")
+	fmt.Println("   Slice length : ", len(thirdSlice), " capacity ", cap(thirdSlice))
+	for index, value := range thirdSlice {
+		fmt.Println("   index : ", index, " value : ", value)
+	}
 }
