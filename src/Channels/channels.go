@@ -6,17 +6,18 @@ import (
 )
 
 type (
-	message struct{
-		To []string
-		From string
+	message struct {
+		To      []string
+		From    string
 		Content string
 	}
 
-	failedMessage struct{
-		ErrorMessage string
+	failedMessage struct {
+		ErrorMessage    string
 		originalMessage message
 	}
 )
+
 func main() {
 
 	fmt.Println("Test with a simple channel")
@@ -78,16 +79,16 @@ func main() {
 
 		//Read from channel and display complet phrase
 		/*
-		for i := 0; i < len(splitPhrase); i++ {
-			if msg, ok := <- ch; ok {// if there is more message
-				fmt.Print(msg + " ")
-		}else{
-			break
-		}
+			for i := 0; i < len(splitPhrase); i++ {
+				if msg, ok := <- ch; ok {// if there is more message
+					fmt.Print(msg + " ")
+			}else{
+				break
+			}
 		*/
 
 		//Better syntax
-		for msg := range(ch){
+		for msg := range ch {
 			fmt.Print(msg + " ")
 		}
 
@@ -96,7 +97,7 @@ func main() {
 	//With two channels- version 1
 	fmt.Println("")
 	fmt.Println("Example with two channels - version 1")
-	func(){
+	func() {
 
 		//Create channels
 		msgCh := make(chan message, 1)
@@ -104,13 +105,13 @@ func main() {
 
 		//Create messages
 		msg := message{
-			To: []string{"foo@goo.com"},
-			From: "from@goo.com",
+			To:      []string{"foo@goo.com"},
+			From:    "from@goo.com",
 			Content: "Keep it secret, keep it safe",
 		}
 
 		failMsg := failedMessage{
-			ErrorMessage: "Message intercepted by spider man",
+			ErrorMessage:    "Message intercepted by spider man",
 			originalMessage: message{},
 		}
 
@@ -127,7 +128,7 @@ func main() {
 	//With two channels- version 2
 	fmt.Println("")
 	fmt.Println("Example with two channels - version 2")
-	func(){
+	func() {
 
 		//Create channels
 		msgCh := make(chan message, 1)
@@ -135,13 +136,13 @@ func main() {
 
 		//Create messages
 		msg := message{
-			To: []string{"foo@goo.com"},
-			From: "from@goo.com",
+			To:      []string{"foo@goo.com"},
+			From:    "from@goo.com",
 			Content: "Keep it secret, keep it safe",
 		}
 
 		failMsg := failedMessage{
-			ErrorMessage: "Message intercepted by spider man",
+			ErrorMessage:    "Message intercepted by spider man",
 			originalMessage: message{},
 		}
 
@@ -150,33 +151,35 @@ func main() {
 
 		//Only first case is executed
 		select {
-			case receiveMsg := <- msgCh:
+		case receiveMsg := <-msgCh:
+			fmt.Println(receiveMsg)
+
+		case failedMsg := <-failCh:
+			fmt.Println(failedMsg)
+
+		default:
+			fmt.Println("No message on channel")
+		}
+
+		//Three cases are executed
+		fmt.Println("")
+		fmt.Println("Test with a for loop, to treat all messages")
+		msgCh <- msg
+		//failCh <- failMsg : Message is still in channel
+		exitFor := false
+		for {
+			select {
+			case receiveMsg := <-msgCh:
 				fmt.Println(receiveMsg)
 
-			case failedMsg := <- failCh:
+			case failedMsg := <-failCh:
 				fmt.Println(failedMsg)
 
 			default:
 				fmt.Println("No message on channel")
-		}
-
-		//Three cases are executed
-		msgCh <- msg
-		//failCh <- failMsg : Message is still in channel
-		exitFor := false;
-		for{
-			select {
-				case receiveMsg := <- msgCh:
-					fmt.Println(receiveMsg)
-
-				case failedMsg := <- failCh:
-					fmt.Println(failedMsg)
-
-				default:
-					fmt.Println("No message on channel")
-					exitFor = true
+				exitFor = true
 			}
-			if exitFor{
+			if exitFor {
 				break
 			}
 		}
